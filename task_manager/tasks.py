@@ -19,7 +19,11 @@ def add(args):
 
     last_task_id = 0 if not tasks_ids else max(tasks_ids)
     new_task_id = last_task_id + 1
-    subprocess.run([config.TEXT_EDITOR, os.path.join(TASKS_DIR, str(new_task_id))])
+    if hasattr(args, 't'):
+        with open(os.path.join(TASKS_DIR, str(new_task_id)), 'w') as file:
+            print(args.t, file=file)
+    else:
+        subprocess.run([config.TEXT_EDITOR, os.path.join(TASKS_DIR, str(new_task_id))])
 
 
 def lst(args):
@@ -85,6 +89,7 @@ if __name__ == '__main__':
     list_parser.set_defaults(func=lst)
 
     add_parser = subparsers.add_parser('add')
+    add_parser.add_argument('-t', type=str)
     add_parser.set_defaults(func=add)
 
     edit_parser = subparsers.add_parser('edit')
